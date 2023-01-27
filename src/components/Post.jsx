@@ -12,6 +12,8 @@ export function Post({ author, publishedAt, content }) {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
 
+  const isNewCommentEmpty = newComment.length === 0;
+
   const publisedDateFormatted = format(publishedAt, "d 'de' LLLL 'às' HH:mm'h'", {
     locale: ptBR,
   })
@@ -28,7 +30,12 @@ export function Post({ author, publishedAt, content }) {
   }
 
   function handleNewComment(event){
+    event.target.setCustomValidity('')
     setNewComment(event.target.value);
+  }
+
+  function handleNewCommentInvalid(event) {
+    event.target.setCustomValidity('Preenchimento obrigatório')
   }
 
   function deleteComment(commentToDelete) {
@@ -72,9 +79,13 @@ export function Post({ author, publishedAt, content }) {
           name="comment" 
           value={newComment}
           onChange={event => handleNewComment(event)}
+          onInvalid={event => handleNewCommentInvalid(event)}
+          required
         />
         <footer>
-          <button type="submit">Publicar</button>
+          <button type="submit" disabled={isNewCommentEmpty}>
+            Publicar
+          </button>
         </footer>
       </form>
 
